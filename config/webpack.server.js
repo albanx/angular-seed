@@ -24,7 +24,7 @@ const ngcWebpack = require('ngc-webpack');
 /**
  * Webpack Constants
  */
-const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+const ENV = 'production';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const AOT = helpers.hasNpmFlag('aot');
@@ -82,7 +82,7 @@ module.exports = {
             {
                 test: /\.ts$/,
                 use: [
-                    { // MAKE SURE TO CHAIN VANILLA JS CODE, I.E. TS COMPILATION OUTPUT.
+                    {
                         loader: 'ng-router-loader',
                         options: {
                             loader: 'async-import',
@@ -215,12 +215,6 @@ module.exports = {
         new ScriptExtHtmlWebpackPlugin({
             defaultAttribute: 'defer'
         }),
-        /**
-         * Plugin LoaderOptionsPlugin (experimental)
-         *
-         * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-         */
-        new LoaderOptionsPlugin({}),
 
         // Fix Angular 2
         new NormalModuleReplacementPlugin(

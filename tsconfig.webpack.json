@@ -12,15 +12,19 @@
         "importHelpers": true,
         "strictNullChecks": false,
         "lib": [
-            "es2015",
-            "dom"
+            "dom",
+            "es6"
         ],
         "typeRoots": [
             "node_modules/@types"
         ],
         "types": [
             "hammerjs",
-            "node"
+            "jasmine",
+            "node",
+            "source-map",
+            "uglify-js",
+            "webpack"
         ]
     },
     "exclude": [
