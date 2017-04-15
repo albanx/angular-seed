@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
     res.render('index', {req});
 });
 
-app.get('/lazy', (req, res) => {
+app.get('*', (req, res) => {
     res.render('index', {req});
 });
 

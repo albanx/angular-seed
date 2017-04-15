@@ -214,12 +214,6 @@ module.exports = {
         new ScriptExtHtmlWebpackPlugin({
             defaultAttribute: 'defer'
         }),
-        /**
-         * Plugin LoaderOptionsPlugin (experimental)
-         *
-         * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-         */
-        new LoaderOptionsPlugin({}),
 
         // Fix Angular 2
         new NormalModuleReplacementPlugin(
@@ -304,7 +298,6 @@ module.exports = {
                 negate_iife: false // we need this for lazy v8
             },
         }),
-
         new NormalModuleReplacementPlugin(
             /zone\.js(\\|\/)dist(\\|\/)long-stack-trace-zone/,
             helpers.root('config/empty.js')
@@ -340,61 +333,6 @@ module.exports = {
         //   /src(\\|\/)debug(\\|\/)debug_renderer/,
         //   helpers.root('config/empty.js')
         // ),
-
-        /**
-         * Plugin: CompressionPlugin
-         * Description: Prepares compressed versions of assets to serve
-         * them with Content-Encoding
-         *
-         * See: https://github.com/webpack/compression-webpack-plugin
-         */
-        //  install compression-webpack-plugin
-        // new CompressionPlugin({
-        //   regExp: /\.css$|\.html$|\.js$|\.map$/,
-        //   threshold: 2 * 1024
-        // })
-
-        /**
-         * Plugin LoaderOptionsPlugin (experimental)
-         *
-         * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-         */
-        new LoaderOptionsPlugin({
-            minimize: true,
-            debug: false,
-            options: {
-
-                /**
-                 * Html loader advanced options
-                 *
-                 * See: https://github.com/webpack/html-loader#advanced-options
-                 */
-                // TODO: Need to workaround Angular 2's html syntax => #id [bind] (event) *ngFor
-                htmlLoader: {
-                    minimize: true,
-                    removeAttributeQuotes: false,
-                    caseSensitive: true,
-                    customAttrSurround: [
-                        [/#/, /(?:)/],
-                        [/\*/, /(?:)/],
-                        [/\[?\(?/, /(?:)/]
-                    ],
-                    customAttrAssign: [/\)?\]?=/]
-                },
-
-            }
-        }),
-
-        /**
-         * Plugin: BundleAnalyzerPlugin
-         * Description: Webpack plugin and CLI utility that represents
-         * bundle content as convenient interactive zoomable treemap
-         *
-         * `npm run build:prod -- --env.analyze` to use
-         *
-         * See: https://github.com/th0r/webpack-bundle-analyzer
-         */
-
     ],
 
     /*

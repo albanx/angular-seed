@@ -20,7 +20,6 @@ const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const ngcWebpack = require('ngc-webpack');
-
 /**
  * Webpack Constants
  */
@@ -28,6 +27,7 @@ const ENV = 'production';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const AOT = helpers.hasNpmFlag('aot');
+
 
 module.exports = {
     devtool: 'source-map',
@@ -151,20 +151,20 @@ module.exports = {
          * See: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
          * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
          */
-        new CommonsChunkPlugin({
-            name: 'polyfills',
-            chunks: ['polyfills']
-        }),
-        // This enables tree shaking of the vendor modules
-        new CommonsChunkPlugin({
-            name: 'vendor',
-            chunks: ['main'],
-            minChunks: module => /node_modules/.test(module.resource)
-        }),
-        // Specify the correct order the scripts will be injected in
-        new CommonsChunkPlugin({
-            name: ['polyfills', 'vendor'].reverse()
-        }),
+        // new CommonsChunkPlugin({
+        //     name: 'polyfills',
+        //     chunks: ['polyfills']
+        // }),
+        // // This enables tree shaking of the vendor modules
+        // new CommonsChunkPlugin({
+        //     name: 'vendor',
+        //     chunks: ['main'],
+        //     minChunks: module => /node_modules/.test(module.resource)
+        // }),
+        // // Specify the correct order the scripts will be injected in
+        // new CommonsChunkPlugin({
+        //     name: ['polyfills', 'vendor'].reverse()
+        // }),
 
         /**
          * Plugin: ContextReplacementPlugin
@@ -188,7 +188,8 @@ module.exports = {
          * See: https://www.npmjs.com/package/copy-webpack-plugin
          */
         new CopyWebpackPlugin([
-            {from: 'src/assets', to: 'assets'},
+            {from: 'src/images', to: 'images'},
+            {from: 'src/css'}
         ]),
 
 

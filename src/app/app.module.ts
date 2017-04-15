@@ -18,7 +18,7 @@ import {AboutComponent} from './about';
         HomeComponent
     ],
     imports: [ // import Angular's modules
-        BrowserModule,
+        BrowserModule.withServerTransition({appId: 'appIdSample'}),
         FormsModule,
         HttpModule,
         AppRoutingModule
