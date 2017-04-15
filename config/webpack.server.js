@@ -95,13 +95,6 @@ module.exports = {
             {
                 test: /\.ts$/,
                 use: [
-                    {
-                        loader: '@angularclass/hmr-loader',
-                        options: {
-                            pretty: !isProd,
-                            prod: isProd
-                        }
-                    },
                     { // MAKE SURE TO CHAIN VANILLA JS CODE, I.E. TS COMPILATION OUTPUT.
                         loader: 'ng-router-loader',
                         options: {
@@ -346,19 +339,6 @@ module.exports = {
                 negate_iife: false // we need this for lazy v8
             },
         }),
-
-        /**
-         * Plugin: NormalModuleReplacementPlugin
-         * Description: Replace resources that matches resourceRegExp with newResource
-         *
-         * See: http://webpack.github.io/docs/list-of-plugins.html#normalmodulereplacementplugin
-         */
-
-        new NormalModuleReplacementPlugin(
-            /angular2-hmr/,
-            helpers.root('config/empty.js')
-        ),
-
         new NormalModuleReplacementPlugin(
             /zone\.js(\\|\/)dist(\\|\/)long-stack-trace-zone/,
             helpers.root('config/empty.js')

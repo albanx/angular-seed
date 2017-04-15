@@ -8,7 +8,7 @@ import {ActivatedRoute} from '@angular/router';
     template: `
     <h1>About</h1>
     <div>
-      For hot module reloading run
+      For hot module reloading run asd asdasd
       <pre>npm run start:hmr</pre>
     </div>
     <div>

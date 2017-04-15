@@ -35,11 +35,6 @@ const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3002;
 const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
-const METADATA = {
-    isDevServer: helpers.isWebpackDevServer(),
-    ENV: ENV,
-    HMR: HMR
-};
 
 let isProd = false;
 const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
@@ -69,13 +64,6 @@ module.exports = {
                 test: /\.ts$/,
                 use: [
                     {
-                        loader: '@angularclass/hmr-loader',
-                        options: {
-                            pretty: !isProd,
-                            prod: isProd
-                        }
-                    },
-                    { // MAKE SURE TO CHAIN VANILLA JS CODE, I.E. TS COMPILATION OUTPUT.
                         loader: 'ng-router-loader',
                         options: {
                             loader: 'async-import',
@@ -205,8 +193,8 @@ module.exports = {
          * See: https://www.npmjs.com/package/copy-webpack-plugin
          */
         new CopyWebpackPlugin([
-            {from: 'src/assets', to: 'assets'},
-            {from: 'src/meta'}
+            {from: 'src/images', to: 'images'},
+            {from: 'src/css'}
         ]),
 
 
@@ -221,8 +209,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
             chunksSortMode: 'dependency',
-            metadata: METADATA,
-            inject: 'head'
+            inject: 'head',
+            isDevServer: helpers.isWebpackDevServer(),
+            HMR: HMR
         }),
         /*
          * Plugin: ScriptExtHtmlWebpackPlugin
@@ -234,58 +223,11 @@ module.exports = {
         new ScriptExtHtmlWebpackPlugin({
             defaultAttribute: 'defer'
         }),
-        /**
-         * Plugin LoaderOptionsPlugin (experimental)
-         *
-         * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-         */
-        new LoaderOptionsPlugin({}),
-
-        // Fix Angular 2
-        new NormalModuleReplacementPlugin(
-            /facade(\\|\/)async/,
-            helpers.root('node_modules/@angular/core/src/facade/async.js')
-        ),
-        new NormalModuleReplacementPlugin(
-            /facade(\\|\/)collection/,
-            helpers.root('node_modules/@angular/core/src/facade/collection.js')
-        ),
-        new NormalModuleReplacementPlugin(
-            /facade(\\|\/)errors/,
-            helpers.root('node_modules/@angular/core/src/facade/errors.js')
-        ),
-        new NormalModuleReplacementPlugin(
-            /facade(\\|\/)lang/,
-            helpers.root('node_modules/@angular/core/src/facade/lang.js')
-        ),
-        new NormalModuleReplacementPlugin(
-            /facade(\\|\/)math/,
-            helpers.root('node_modules/@angular/core/src/facade/math.js')
-        ),
 
         new ngcWebpack.NgcWebpackPlugin({
             disabled: !AOT,
             tsConfig: helpers.root('tsconfig.webpack.json'),
             resourceOverride: helpers.root('config/resource-override.js')
-        }),
-        /**
-         * Plugin: DefinePlugin
-         * Description: Define free variables.
-         * Useful for having development builds with debug logging or adding global constants.
-         *
-         * Environment helpers
-         *
-         * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-         */
-        // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
-        new DefinePlugin({
-            'ENV': JSON.stringify(METADATA.ENV),
-            'HMR': METADATA.HMR,
-            'process.env': {
-                'ENV': JSON.stringify(METADATA.ENV),
-                'NODE_ENV': JSON.stringify(METADATA.ENV),
-                'HMR': METADATA.HMR,
-            }
         }),
 
         new DllBundlesPlugin({
@@ -302,14 +244,16 @@ module.exports = {
                     },
                 ],
                 vendor: [
-                    '@angular/platform-browser',
-                    '@angular/platform-browser-dynamic',
-                    '@angular/core',
+                    '@angular/animations',
                     '@angular/common',
+                    '@angular/compiler',
+                    '@angular/core',
                     '@angular/forms',
                     '@angular/http',
+                    '@angular/platform-browser',
+                    '@angular/platform-browser-dynamic',
+                    '@angular/platform-server',
                     '@angular/router',
-                    '@angularclass/hmr',
                     'rxjs',
                 ]
             },
@@ -331,18 +275,7 @@ module.exports = {
         new AddAssetHtmlPlugin([
             {filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('polyfills')}`)},
             {filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('vendor')}`)}
-        ]),
-
-        /**
-         * Plugin LoaderOptionsPlugin (experimental)
-         *
-         * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-         */
-        new LoaderOptionsPlugin({
-            debug: true,
-            options: {}
-        }),
-
+        ])
     ],
 
     /**
@@ -363,12 +296,7 @@ module.exports = {
         }
     },
 
-    /*
-     * Include polyfills or mocks for various node stuff
-     * Description: Node configuration
-     *
-     * See: https://webpack.github.io/docs/configuration.html#node
-     */
+    //https://webpack.github.io/docs/configuration.html#node
     node: {
         global: true,
         crypto: 'empty',
@@ -377,4 +305,4 @@ module.exports = {
         clearImmediate: false,
         setImmediate: false
     }
-}
+};

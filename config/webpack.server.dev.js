@@ -1,9 +1,10 @@
 /**
- * @author: @AngularClass
+ * @author: Alban
  */
 
 const webpack = require('webpack');
 const helpers = require('./helpers');
+
 /*
  * Webpack Plugins
  */
@@ -21,6 +22,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const ngcWebpack = require('ngc-webpack');
+
 /**
  * Webpack Constants
  */
@@ -28,16 +30,6 @@ const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const AOT = helpers.hasNpmFlag('aot');
-const METADATA = {
-    title: 'Angular2 Webpack Starter by @gdi2290 from @AngularClass',
-    baseUrl: '/',
-    isDevServer: helpers.isWebpackDevServer(),
-    host: HOST,
-    port: PORT,
-    ENV: ENV,
-    HMR: false
-};
-
 let isProd = true;
 
 module.exports = {
@@ -90,13 +82,6 @@ module.exports = {
             {
                 test: /\.ts$/,
                 use: [
-                    {
-                        loader: '@angularclass/hmr-loader',
-                        options: {
-                            pretty: !isProd,
-                            prod: isProd
-                        }
-                    },
                     { // MAKE SURE TO CHAIN VANILLA JS CODE, I.E. TS COMPILATION OUTPUT.
                         loader: 'ng-router-loader',
                         options: {
@@ -218,7 +203,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
             chunksSortMode: 'dependency',
-            metadata: METADATA,
             inject: 'head'
         }),
         /*
@@ -264,38 +248,6 @@ module.exports = {
             tsConfig: helpers.root('tsconfig.server.json'),
             resourceOverride: helpers.root('config/resource-override.js')
         }),
-        /**
-         * Plugin: DefinePlugin
-         * Description: Define free variables.
-         * Useful for having development builds with debug logging or adding global constants.
-         *
-         * Environment helpers
-         *
-         * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-         */
-        // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
-        new DefinePlugin({
-            'ENV': JSON.stringify(METADATA.ENV),
-            'HMR': METADATA.HMR,
-            'process.env': {
-                'ENV': JSON.stringify(METADATA.ENV),
-                'NODE_ENV': JSON.stringify(METADATA.ENV),
-                'HMR': METADATA.HMR,
-            }
-        }),
-
-
-        /**
-         * Plugin: NormalModuleReplacementPlugin
-         * Description: Replace resources that matches resourceRegExp with newResource
-         *
-         * See: http://webpack.github.io/docs/list-of-plugins.html#normalmodulereplacementplugin
-         */
-
-        new NormalModuleReplacementPlugin(
-            /angular2-hmr/,
-            helpers.root('config/empty.js')
-        ),
 
         new NormalModuleReplacementPlugin(
             /zone\.js(\\|\/)dist(\\|\/)long-stack-trace-zone/,
