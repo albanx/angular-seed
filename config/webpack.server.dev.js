@@ -1,10 +1,6 @@
-/**
- * @author: Alban
- */
 
 const webpack = require('webpack');
 const helpers = require('./helpers');
-
 /*
  * Webpack Plugins
  */
@@ -13,12 +9,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const IgnorePlugin = require('webpack/lib/IgnorePlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
-const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const ngcWebpack = require('ngc-webpack');
@@ -26,11 +22,10 @@ const ngcWebpack = require('ngc-webpack');
 /**
  * Webpack Constants
  */
-const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
-const HOST = process.env.HOST || 'localhost';
+const ENV = 'development';const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const AOT = helpers.hasNpmFlag('aot');
-let isProd = true;
+
 
 module.exports = {
     devtool: 'source-map',
@@ -50,39 +45,10 @@ module.exports = {
     module: {
 
         rules: [
-            //get angular components css and load to dom as string
-            {
-                test: /\.css$/,
-                use: ['to-string-loader', 'css-loader'],
-                exclude: [helpers.root('src', 'sass')]
-            },
-            //get angular components scss, convert to css and load to dom as string
-            {
-                test: /\.scss$/,
-                use: ['to-string-loader', 'css-loader', 'sass-loader'],
-                exclude: [helpers.root('src', 'sass')]
-            },
-            //Extract CSS files from .src/sass directory to external CSS file
-            {
-                test: /\.css$/,
-                use: ExtractTextPlugin.extract({fallback: 'style-loader', use: 'css-loader'}),
-                include: [helpers.root('src', 'sass')]
-            },
-
-            //Extract and compile SCSS files from .src/sass directory to external CSS file
-            {
-                test: /\.scss$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: ['to-string-loader', 'css-loader', 'sass-loader']
-                }),
-                include: [helpers.root('src', 'sass')]
-            },
-
             {
                 test: /\.ts$/,
                 use: [
-                    { // MAKE SURE TO CHAIN VANILLA JS CODE, I.E. TS COMPILATION OUTPUT.
+                    {
                         loader: 'ng-router-loader',
                         options: {
                             loader: 'async-import',
@@ -105,6 +71,30 @@ module.exports = {
             {
                 test: /\.json$/,
                 use: 'json-loader'
+            },
+            //angular component styles file to string
+            {
+                test: /\.css$/,
+                use: ['to-string-loader', 'css-loader'],
+                exclude: [helpers.root('src', 'sass')]
+            },
+            //load css files into DOM from sass dir
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+                include: [helpers.root('src', 'sass')]
+            },
+            //to string and sass loader for the scss of angular components. return string
+            {
+                test: /\.scss$/,
+                use: ['to-string-loader', 'css-loader', 'sass-loader'],
+                exclude: [helpers.root('src', 'sass')]
+            },
+            //sass loader for .scss files in sass folder, return css to DOM
+            {
+                test: /\.scss$/,
+                use: ['style-loader', 'css-loader', 'sass-loader'],
+                include: [helpers.root('src', 'sass')]
             },
             {
                 test: /\.html$/,
@@ -142,7 +132,7 @@ module.exports = {
          *
          * See: https://github.com/s-panferov/awesome-typescript-loader#forkchecker-boolean-defaultfalse
          */
-        // new CheckerPlugin(),
+        new CheckerPlugin(),
         /*
          * Plugin: CommonsChunkPlugin
          * Description: Shares common code between the pages.
@@ -188,7 +178,8 @@ module.exports = {
          * See: https://www.npmjs.com/package/copy-webpack-plugin
          */
         new CopyWebpackPlugin([
-            {from: 'src/assets', to: 'assets'},
+            {from: 'src/images', to: 'images'},
+            {from: 'src/css'}
         ]),
 
 
@@ -203,7 +194,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
             chunksSortMode: 'dependency',
-            inject: 'head'
+            inject: 'head',
+            isDevServer: helpers.isWebpackDevServer(),
+            HMR: HMR
         }),
         /*
          * Plugin: ScriptExtHtmlWebpackPlugin
@@ -215,12 +208,6 @@ module.exports = {
         new ScriptExtHtmlWebpackPlugin({
             defaultAttribute: 'defer'
         }),
-        /**
-         * Plugin LoaderOptionsPlugin (experimental)
-         *
-         * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-         */
-        new LoaderOptionsPlugin({}),
 
         // Fix Angular 2
         new NormalModuleReplacementPlugin(
@@ -284,29 +271,6 @@ module.exports = {
         //   /src(\\|\/)debug(\\|\/)debug_renderer/,
         //   helpers.root('config/empty.js')
         // ),
-
-        /**
-         * Plugin: CompressionPlugin
-         * Description: Prepares compressed versions of assets to serve
-         * them with Content-Encoding
-         *
-         * See: https://github.com/webpack/compression-webpack-plugin
-         */
-        //  install compression-webpack-plugin
-        // new CompressionPlugin({
-        //   regExp: /\.css$|\.html$|\.js$|\.map$/,
-        //   threshold: 2 * 1024
-        // })
-
-        /**
-         * Plugin LoaderOptionsPlugin (experimental)
-         *
-         * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-         */
-        new LoaderOptionsPlugin({
-            debug: true,
-            options: {}
-        })
     ],
 
     /*

@@ -1,13 +1,7 @@
-/**
- * @author: @AngularClass
- */
 
 const webpack = require('webpack');
 const helpers = require('./helpers');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const webpackMergeDll = webpackMerge.strategy({plugins: 'replace'});
-
-/**
+/*
  * Webpack Plugins
  */
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
@@ -16,7 +10,6 @@ const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
-// problem with copy-webpack-plugin
 const AssetsPlugin = require('assets-webpack-plugin');
 const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
@@ -25,19 +18,18 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ngcWebpack = require('ngc-webpack');
-const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
+const dllConfig = require('./webpack.dll.js'); // the settings that are common to prod and dev
+const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
 
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const ENV = 'development';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3002;
 const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 
-let isProd = false;
-const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
 
 module.exports = {
     devtool: 'cheap-module-source-map',
@@ -99,18 +91,19 @@ module.exports = {
                 use: ['to-string-loader', 'css-loader'],
                 exclude: [helpers.root('src', 'sass')]
             },
-            //load css files into DOM from sass dir
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
-                include: [helpers.root('src', 'sass')]
-            },
             //to string and sass loader for the scss of angular components. return string
             {
                 test: /\.scss$/,
                 use: ['to-string-loader', 'css-loader', 'sass-loader'],
                 exclude: [helpers.root('src', 'sass')]
             },
+            //load css files into DOM from sass dir
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+                include: [helpers.root('src', 'sass')]
+            },
+
             //sass loader for .scss files in sass folder, return css to DOM
             {
                 test: /\.scss$/,
@@ -258,10 +251,7 @@ module.exports = {
                 ]
             },
             dllDir: helpers.root('dll'),
-            webpackConfig: webpackMergeDll(commonConfig({env: ENV}), {
-                devtool: 'cheap-module-source-map',
-                plugins: []
-            })
+            webpackConfig: dllConfig
         }),
 
         /**

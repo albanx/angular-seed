@@ -1,6 +1,3 @@
-/**
- * @author: @AngularClass
- */
 
 const webpack = require('webpack');
 const helpers = require('./helpers');
@@ -23,6 +20,7 @@ const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const ngcWebpack = require('ngc-webpack');
+
 /**
  * Webpack Constants
  */
@@ -30,17 +28,6 @@ const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const AOT = helpers.hasNpmFlag('aot');
-const METADATA = {
-    title: 'Angular2 Webpack Starter by @gdi2290 from @AngularClass',
-    baseUrl: '/',
-    isDevServer: helpers.isWebpackDevServer(),
-    host: HOST,
-    port: PORT,
-    ENV: ENV,
-    HMR: false
-};
-
-let isProd = true;
 
 module.exports = {
     devtool: 'source-map',
@@ -216,7 +203,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
             chunksSortMode: 'dependency',
-            metadata: METADATA,
             inject: 'head'
         }),
         /*
@@ -271,27 +257,6 @@ module.exports = {
 
         new OptimizeJsPlugin({
             sourceMap: false
-        }),
-
-
-        /**
-         * Plugin: DefinePlugin
-         * Description: Define free variables.
-         * Useful for having development builds with debug logging or adding global constants.
-         *
-         * Environment helpers
-         *
-         * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-         */
-        // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
-        new DefinePlugin({
-            'ENV': JSON.stringify(METADATA.ENV),
-            'HMR': METADATA.HMR,
-            'process.env': {
-                'ENV': JSON.stringify(METADATA.ENV),
-                'NODE_ENV': JSON.stringify(METADATA.ENV),
-                'HMR': METADATA.HMR,
-            }
         }),
 
         /**
@@ -374,61 +339,6 @@ module.exports = {
         //   /src(\\|\/)debug(\\|\/)debug_renderer/,
         //   helpers.root('config/empty.js')
         // ),
-
-        /**
-         * Plugin: CompressionPlugin
-         * Description: Prepares compressed versions of assets to serve
-         * them with Content-Encoding
-         *
-         * See: https://github.com/webpack/compression-webpack-plugin
-         */
-        //  install compression-webpack-plugin
-        // new CompressionPlugin({
-        //   regExp: /\.css$|\.html$|\.js$|\.map$/,
-        //   threshold: 2 * 1024
-        // })
-
-        /**
-         * Plugin LoaderOptionsPlugin (experimental)
-         *
-         * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-         */
-        new LoaderOptionsPlugin({
-            minimize: true,
-            debug: false,
-            options: {
-
-                /**
-                 * Html loader advanced options
-                 *
-                 * See: https://github.com/webpack/html-loader#advanced-options
-                 */
-                // TODO: Need to workaround Angular 2's html syntax => #id [bind] (event) *ngFor
-                htmlLoader: {
-                    minimize: true,
-                    removeAttributeQuotes: false,
-                    caseSensitive: true,
-                    customAttrSurround: [
-                        [/#/, /(?:)/],
-                        [/\*/, /(?:)/],
-                        [/\[?\(?/, /(?:)/]
-                    ],
-                    customAttrAssign: [/\)?\]?=/]
-                },
-
-            }
-        }),
-
-        /**
-         * Plugin: BundleAnalyzerPlugin
-         * Description: Webpack plugin and CLI utility that represents
-         * bundle content as convenient interactive zoomable treemap
-         *
-         * `npm run build:prod -- --env.analyze` to use
-         *
-         * See: https://github.com/th0r/webpack-bundle-analyzer
-         */
-
     ],
 
     /*

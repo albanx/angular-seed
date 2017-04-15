@@ -1,6 +1,3 @@
-/**
- * @author: @AngularClass
- */
 
 const webpack = require('webpack');
 const helpers = require('./helpers');
@@ -26,21 +23,11 @@ const ngcWebpack = require('ngc-webpack');
 /**
  * Webpack Constants
  */
-const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+const ENV = 'production';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const AOT = helpers.hasNpmFlag('aot');
-const METADATA = {
-    title: 'Angular2 Webpack Starter by @gdi2290 from @AngularClass',
-    baseUrl: '/',
-    isDevServer: helpers.isWebpackDevServer(),
-    host: HOST,
-    port: PORT,
-    ENV: ENV,
-    HMR: false
-};
 
-let isProd = true;
 
 module.exports = {
     devtool: 'source-map',
@@ -62,39 +49,10 @@ module.exports = {
     module: {
 
         rules: [
-            //get angular components css and load to dom as string
-            {
-                test: /\.css$/,
-                use: ['to-string-loader', 'css-loader'],
-                exclude: [helpers.root('src', 'sass')]
-            },
-            //get angular components scss, convert to css and load to dom as string
-            {
-                test: /\.scss$/,
-                use: ['to-string-loader', 'css-loader', 'sass-loader'],
-                exclude: [helpers.root('src', 'sass')]
-            },
-            //Extract CSS files from .src/sass directory to external CSS file
-            {
-                test: /\.css$/,
-                use: ExtractTextPlugin.extract({fallback: 'style-loader', use: 'css-loader'}),
-                include: [helpers.root('src', 'sass')]
-            },
-
-            //Extract and compile SCSS files from .src/sass directory to external CSS file
-            {
-                test: /\.scss$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: ['to-string-loader', 'css-loader', 'sass-loader']
-                }),
-                include: [helpers.root('src', 'sass')]
-            },
-
             {
                 test: /\.ts$/,
                 use: [
-                    { // MAKE SURE TO CHAIN VANILLA JS CODE, I.E. TS COMPILATION OUTPUT.
+                    {
                         loader: 'ng-router-loader',
                         options: {
                             loader: 'async-import',
@@ -118,6 +76,34 @@ module.exports = {
                 test: /\.json$/,
                 use: 'json-loader'
             },
+            //angular component styles file to string
+            {
+                test: /\.css$/,
+                use: ['to-string-loader', 'css-loader'],
+                exclude: [helpers.root('src', 'sass')]
+            },
+            //to string and sass loader for the scss of angular components. return string
+            {
+                test: /\.scss$/,
+                use: ['to-string-loader', 'css-loader', 'sass-loader'],
+                exclude: [helpers.root('src', 'sass')]
+            },
+            //Extract CSS files from .src/sass directory to external CSS file
+            {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({fallback: 'style-loader', use: 'css-loader'}),
+                include: [helpers.root('src', 'sass')]
+            },
+
+            //Extract and compile SCSS files from .src/sass directory to external CSS file
+            {
+                test: /\.scss$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['to-string-loader', 'css-loader', 'sass-loader']
+                }),
+                include: [helpers.root('src', 'sass')]
+            },
             {
                 test: /\.html$/,
                 use: 'raw-loader',
@@ -136,7 +122,6 @@ module.exports = {
     },
 
     plugins: [
-
         new AssetsPlugin({
             path: helpers.root('dist'),
             filename: 'webpack-assets.json',
@@ -201,8 +186,8 @@ module.exports = {
          * See: https://www.npmjs.com/package/copy-webpack-plugin
          */
         new CopyWebpackPlugin([
-            {from: 'src/assets', to: 'assets'},
-            {from: 'src/meta'}
+            {from: 'src/images', to: 'images'},
+            {from: 'src/css'}
         ]),
 
 
@@ -217,7 +202,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
             chunksSortMode: 'dependency',
-            metadata: METADATA,
             inject: 'head'
         }),
         /*
@@ -273,27 +257,6 @@ module.exports = {
 
         new OptimizeJsPlugin({
             sourceMap: false
-        }),
-
-
-        /**
-         * Plugin: DefinePlugin
-         * Description: Define free variables.
-         * Useful for having development builds with debug logging or adding global constants.
-         *
-         * Environment helpers
-         *
-         * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-         */
-        // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
-        new DefinePlugin({
-            'ENV': JSON.stringify(METADATA.ENV),
-            'HMR': METADATA.HMR,
-            'process.env': {
-                'ENV': JSON.stringify(METADATA.ENV),
-                'NODE_ENV': JSON.stringify(METADATA.ENV),
-                'HMR': METADATA.HMR,
-            }
         }),
 
         /**
