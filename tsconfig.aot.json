@@ -37,7 +37,7 @@
         "**/*.spec.ts"
     ],
     "angularCompilerOptions": {
-        "genDir": "src-server",
+        "genDir": "compiled",
         "skipMetadataEmit": true,
         "entryModule": "./src/app/app.server.module#AppServerModule"
     }

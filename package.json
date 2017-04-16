@@ -17,6 +17,7 @@
     "build:dev": "npm run clean:dist && webpack --config config/webpack.dev.js --progress --profile",
     "build:prod": "npm run clean:dist && webpack --config config/webpack.prod.js  --progress --profile --bail",
     "build:server": "npm run clean:dist && webpack --config config/webpack.server.js  --progress --profile --bail",
+    "build:server:aot": "npm run clean:dist && webpack --config config/webpack.server.aot.js  --progress --profile --bail",
     "build": "npm run build:dev",
     "ci:aot": "npm run lint && npm run test && npm run build:aot && npm run e2e",
     "ci:jit": "npm run lint && npm run test && npm run build:prod && npm run e2e",

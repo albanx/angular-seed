@@ -1,9 +1,5 @@
-
 const webpack = require('webpack');
 const helpers = require('./helpers');
-/*
- * Webpack Plugins
- */
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const IgnorePlugin = require('webpack/lib/IgnorePlugin');
