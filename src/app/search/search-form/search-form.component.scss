@@ -1,0 +1,62 @@
+form {
+    margin: {
+        top: 1.3rem;
+    };
+
+
+    label:not(.checkbox) {
+        font-weight: 600;
+        font-size: 12px;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    select {
+        width: 100%;
+    }
+
+    .group-inputs {
+        position: relative;
+        width: 100%;
+        float: left;
+        display: flex;
+        justify-content: space-between;
+        > * {
+            width: 48%;
+        }
+
+        .separator {
+            display: block;
+            width: 0.45rem;
+            height: 1px;
+            border-bottom: 1px solid #E2E2E2;
+            margin: auto;
+            margin-top: 42px;
+        }
+    }
+
+
+    .reset-btn, .search-btn {
+        font-weight: 400;
+        padding: .8rem;
+        border: none;
+        margin-top: 12px;
+    }
+
+    .nearby-location-error {
+        display: none;
+        color: #f24258;
+        font-size: 0.875rem;
+        padding: 0 0 5px 0;
+    }
+
+    .nearby-location-notification {
+        color: #777;
+        font-size: 0.875rem;
+        padding: 0 0 5px 0;
+    }
+
+    #open-viewing-block {
+        padding-bottom: 2px;
+    }
+}

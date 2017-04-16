@@ -1,0 +1,28 @@
+<div class="wrap">
+    <header class="main-header">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">Logo</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li class="nav-item" routerLinkActive="selected"><a routerLink="home">Home</a></li>
+                    <li class="nav-item" routerLinkActive="selected"><a routerLink="search">Search</a></li>
+                    <li class="nav-item" routerLinkActive="selected"><a routerLink="about">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+<footer class="mainFooter">
+    <p class="copyright">
+        <a href="">Full Site</a> | © Sample Web Site, <span>2017</span>
+    </p>
+    <p class="termsofuse">
+        <a href="/page/terms-and-conditions#14.3">Terms of Use</a> |
+        <a href="/page/privacy-and-legal">Privacy</a> |
+        <a href="/page/privacy-and-legal#cookies">Cookie Policy</a>
+    </p>
+</footer>

@@ -8,6 +8,7 @@ import {AboutComponent} from './about';
         RouterModule.forRoot([
             {path: '', component: HomeComponent},
             {path: 'home', component: HomeComponent},
+            {path: 'search', loadChildren: 'app/search/search.module#SearchModule'},
             {path: 'about', component: AboutComponent},
             {path: '**', redirectTo: ''}
         ])
