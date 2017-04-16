@@ -15,7 +15,7 @@
         "noImplicitReturns": false,
         "noImplicitUseStrict": false,
         "noFallthroughCasesInSwitch": true,
-        "outDir": "./dist/server-build",
+        "outDir": "./dist/server-aot",
         "lib": [
             "dom",
             "es6"
