@@ -32,16 +32,12 @@ const AOT = helpers.hasNpmFlag('aot');
 module.exports = {
     devtool: 'source-map',
     target: 'node',
-    entry: {
-        'polyfills': './src/polyfills.browser.ts',
-        'main': './src/main.server.ts'
-    },
+    entry: './src/main.server.ts',
     output: {
         path: helpers.root('dist/server'),
-        filename: '[name].[chunkhash].bundle.js',
-        sourceMapFilename: '[name].[chunkhash].bundle.map',
-        chunkFilename: '[id].[chunkhash].chunk.js'
-
+        filename: 'server.js',
+        sourceMapFilename: 'server.map',
+        chunkFilename: 'server.[id].chunk.js'
     },
     resolve: {
         extensions: ['.ts', '.js', '.json'],
@@ -239,10 +235,10 @@ module.exports = {
             helpers.root('node_modules/@angular/core/src/facade/math.js')
         ),
 
-        new ngcWebpack.NgcWebpackPlugin({
-            tsConfig: helpers.root('tsconfig.server.json'),
-            resourceOverride: helpers.root('config/resource-override.js')
-        }),
+        // new ngcWebpack.NgcWebpackPlugin({
+        //     tsConfig: helpers.root('tsconfig.server.json'),
+        //     resourceOverride: helpers.root('config/resource-override.js')
+        // }),
         /**
          * Webpack plugin to optimize a JavaScript file for faster initial load
          * by wrapping eagerly-invoked functions.
