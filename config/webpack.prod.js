@@ -32,7 +32,7 @@ module.exports = {
         'main': AOT ? './src/main.browser.aot.ts' : './src/main.browser.ts'
     },
     output: {
-        path: helpers.root('dist'),
+        path: helpers.root('dist/prod'),
         filename: '[name].[chunkhash].bundle.js',
         sourceMapFilename: '[name].[chunkhash].bundle.map',
         chunkFilename: '[id].[chunkhash].chunk.js'
