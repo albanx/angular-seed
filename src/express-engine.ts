@@ -95,7 +95,7 @@ function handleModuleRef(moduleRef: NgModuleRef<{}>, callback: Send): void {
 		.first()
 		.subscribe(() => {
 
-			callback(null, state.renderToString());
+			callback(state.renderToString());
 			moduleRef.destroy();
 		});
 }
