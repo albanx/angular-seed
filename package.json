@@ -76,6 +76,7 @@
     "@angular/router": "4.2.6",
     "@ngrx/core": "^1.2.0",
     "@ngrx/store": "^2.2.3",
+    "@ngrx/store-devtools": "^3.2.4",
     "core-js": "^2.4.1",
     "express": "^4.15.2",
     "http-server": "^0.10.0",
