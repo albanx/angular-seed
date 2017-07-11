@@ -11,7 +11,6 @@ import {AboutComponent} from './about';
 
 
 @NgModule({
-    bootstrap: [AppComponent],
     declarations: [
         AppComponent,
         AboutComponent,
@@ -23,7 +22,9 @@ import {AboutComponent} from './about';
         HttpModule,
         AppRoutingModule
     ],
-    providers: []
+    providers: [],
+    bootstrap: [AppComponent],
+
 })
 export class AppModule {
 

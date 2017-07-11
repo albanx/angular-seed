@@ -11,6 +11,7 @@ const OptimizeJsPlugin = require('optimize-js-plugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const AOT = helpers.hasNpmFlag('aot');
 
 module.exports = {
@@ -111,11 +112,6 @@ module.exports = {
             {from: 'src/images', to: 'images'},
             {from: 'src/css'}
         ]),
-
-        // new ngcWebpack.NgcWebpackPlugin({
-        //     tsConfig: helpers.root('tsconfig.server.json'),
-        //     resourceOverride: helpers.root('config/resource-override.js')
-        // }),
         new OptimizeJsPlugin({
             sourceMap: false
         }),
