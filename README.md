@@ -13,4 +13,5 @@ A minimum code package for Angular 4+ start.
 - Clone the repo
 - Run `npm install`
 - Run `npm start`
+- Server side rendering `npm run server:rendering`
 
