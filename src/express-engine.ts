@@ -99,3 +99,4 @@ function handleModuleRef(moduleRef: NgModuleRef<{}>, callback: Send): void {
 			moduleRef.destroy();
 		});
 }
+
